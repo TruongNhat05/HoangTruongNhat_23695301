@@ -1,0 +1,19 @@
+{
+  "name": "tuan2-async-javascript",
+  "version": "1.0.0",
+  "description": "Bài tập lập trình bất đồng bộ JavaScript (Tuần 2): Promise, Async/Await, Fetch API & Simulated I/O",
+  "type": "module",
+  "scripts": {
+    "test:a": "node -e \"console.log('Chạy từng bài bằng: node A_Basics_with_Promise/bai01.js')\"",
+    "test:b": "node -e \"console.log('Chạy từng bài bằng: node B_Async_Await/bai11.js')\"",
+    "test:c": "node -e \"console.log('Chạy từng bài bằng: node C_Fetch_API_Simulated_IO/bai21.js')\""
+  },
+  "keywords": [
+    "javascript",
+    "promise",
+    "async-await",
+    "fetch-api"
+  ],
+  "author": "",
+  "license": "ISC"
+}
