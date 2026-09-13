@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookStore Online - Preview Giao Diện React Native Flexbox</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header-info {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .header-info h1 {
+      font-size: 20px;
+      margin-bottom: 6px;
+      color: #38bdf8;
+    }
+    .header-info p {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* Khung mô phỏng điện thoại di động */
+    .phone-frame {
+      width: 380px;
+      height: 720px;
+      background: #F8FAFC;
+      border-radius: 36px;
+      border: 10px solid #1e293b;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* 1. HEADER (Cố định trên cùng - tương đương Header.tsx) */
+    .header-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: 56px;
+      padding: 0 16px;
+      background-color: #1E1B4B; /* Màu navy/indigo chủ đạo */
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .logo {
+      color: #FFFFFF;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .icon-group {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+    }
+    .icon {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* 2. SCROLLVIEW (Vùng cuộn nội dung - tương đương ScrollView content) */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      padding-bottom: 100px; /* paddingBottom đủ lớn để nút giỏ không che sách cuối */
+    }
+    .scroll-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    .scroll-content::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    /* CATEGORY CHIPS (flexWrap: 'wrap', gap: 8) */
+    .chips-wrap {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #6366F1;
+      background: #ffffff;
+      color: #4338CA;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .chip:hover {
+      background: #EEF2FF;
+    }
+
+    /* BOOK GRID 2 CỘT (width: 48%, justifyContent: space-between) */
+    .book-grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .book-item {
+      width: 48%;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    .cover-wrap {
+      position: relative; /* Containing block cho Badge */
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #EEF2F7;
+    }
+    .cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* BADGE GIẢM GIÁ / MỚI (position: 'absolute', top: 6, left: 6) */
+    .badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background-color: #DC2626;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 3px 6px;
+      line-height: 1;
+    }
+    .badge-new {
+      background-color: #F97316;
+    }
+
+    .book-title {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.3;
+    }
+    .book-price {
+      margin-top: 2px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1E1B4B;
+    }
+
+    /* 3. FLOATING CART BUTTON (position: 'absolute', bottom: 24, right: 20) */
+    .floating-cart {
+      position: absolute;
+      bottom: 24px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 28px;
+      background-color: #4338CA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
+      z-index: 20;
+    }
+    .floating-cart:active {
+      transform: scale(0.95);
+    }
+    .cart-icon {
+      font-size: 22px;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      background-color: #DC2626;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    .notice {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+      max-width: 380px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-info">
+    <h1>📱 Bản Xem Thử Giao Diện BookStore Online</h1>
+    <p>Áp dụng chuẩn bố cục Flexbox theo đúng mã nguồn React Native</p>
+  </div>
+
+  <!-- Khung điện thoại -->
+  <div class="phone-frame">
+    <!-- 1. Header cố định trên cùng -->
+    <header class="header-container">
+      <div class="logo">📚 BookStore</div>
+      <div class="icon-group">
+        <span class="icon">🔍</span>
+        <span class="icon">🛒</span>
+      </div>
+    </header>
+
+    <!-- 2. ScrollView chứa Chips + Grid -->
+    <main class="scroll-content">
+      <!-- Category Chips -->
+      <div class="chips-wrap" id="chipsContainer"></div>
+
+      <!-- Book Grid (2 cột) -->
+      <div class="book-grid" id="booksContainer"></div>
+    </main>
+
+    <!-- 3. Nút giỏ nổi - NGOÀI ScrollView -->
+    <div class="floating-cart" id="floatingCart" title="Bấm vào để tăng số lượng giỏ hàng">
+      <span class="cart-icon">🛒</span>
+      <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
+    </div>
+  </div>
+
+  <div class="notice">
+    💡 <b>Tương tác thử:</b> Cuộn danh sách (Header và Nút giỏ đứng yên), nhấn vào nút giỏ hàng tròn hoặc bấm vào bìa sách để tăng số lượng!
+  </div>
+
+  <script>
+    const CATEGORIES = [
+      "Văn học", "Kinh tế", "Thiếu nhi", "Kỹ năng sống", "Truyện tranh", "Ngoại ngữ", "Lịch sử"
+    ];
+
+    const BOOKS = [
+      {
+        id: 1,
+        title: "Dế Mèn Phiêu Lưu Ký",
+        author: "Tô Hoài",
+        price: 45000,
+        cover: "https://picsum.photos/seed/book1/400/560",
+        discountPercent: 20
+      },
+      {
+        id: 2,
+        title: "Nhà Giả Kim",
+        author: "Paulo Coelho",
+        price: 89000,
+        cover: "https://picsum.photos/seed/book2/400/560",
+        isNew: true
+      },
+      {
+        id: 3,
+        title: "Sapiens: Lược Sử Loài Người",
+        author: "Yuval Noah Harari",
+        price: 129000,
+        cover: "https://picsum.photos/seed/book3/400/560"
+      },
+      {
+        id: 4,
+        title: "Điều Kỳ Diệu Của Tiệm Tạp Hoá Namiya",
+        author: "Higashino Keigo",
+        price: 98000,
+        cover: "https://picsum.photos/seed/book4/400/560",
+        discountPercent: 15
+      },
+      {
+        id: 5,
+        title: "Muôn Kiếp Nhân Sinh",
+        author: "Nguyên Phong",
+        price: 150000,
+        cover: "https://picsum.photos/seed/book5/400/560"
+      },
+      {
+        id: 6,
+        title: "Cách Nghĩ Để Thành Công",
+        author: "Napoleon Hill",
+        price: 79000,
+        cover: "https://picsum.photos/seed/book6/400/560",
+        isNew: true
+      }
+    ];
+
+    // Render Chips
+    const chipsContainer = document.getElementById("chipsContainer");
+    CATEGORIES.forEach(name => {
+      const chip = document.createElement("div");
+      chip.className = "chip";
+      chip.textContent = name;
+      chipsContainer.appendChild(chip);
+    });
+
+    // Render Books
+    const booksContainer = document.getElementById("booksContainer");
+    BOOKS.forEach(book => {
+      const item = document.createElement("div");
+      item.className = "book-item";
+
+      let badgeHtml = "";
+      if (book.isNew) {
+        badgeHtml = `<div class="badge badge-new">Mới</div>`;
+      } else if (book.discountPercent) {
+        badgeHtml = `<div class="badge">-${book.discountPercent}%</div>`;
+      }
+
+      item.innerHTML = `
+        <div class="cover-wrap">
+          <img class="cover-img" src="${book.cover}" alt="${book.title}" />
+          ${badgeHtml}
+        </div>
+        <div class="book-title">${book.title}</div>
+        <div class="book-price">${book.price.toLocaleString()} đ</div>
+      `;
+
+      item.onclick = () => {
+        incrementCart();
+      };
+
+      booksContainer.appendChild(item);
+    });
+
+    // Giỏ hàng
+    let cartCount = 0;
+    const cartBadge = document.getElementById("cartBadge");
+    const floatingCart = document.getElementById("floatingCart");
+
+    function incrementCart() {
+      cartCount++;
+      cartBadge.textContent = cartCount;
+      cartBadge.style.display = "flex";
+    }
+
+    floatingCart.onclick = incrementCart;
+  </script>
+</body>
+</html>
